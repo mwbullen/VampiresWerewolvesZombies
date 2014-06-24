@@ -24,16 +24,18 @@ public class zombieAi : MonoBehaviour {
 		
 		//Go to new target
 		navAgent.SetDestination(currentTarget.transform.position);
+
+		Destroy (gameObject, lifeSpan);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		timeAlive += Time.deltaTime;
 
-		if (timeAlive >= lifeSpan) {
-			Destroy(this.gameObject);
+		/*if (timeAlive >= lifeSpan) {
+			Destroy(gameObject);
 				}
-
+*/
 		timeSinceAttack += Time.deltaTime;
 		
 		if (timeSinceAttack > attackInterval) {
@@ -91,7 +93,8 @@ public class zombieAi : MonoBehaviour {
 				Camera.main.SendMessage("createZombie", r.collider.transform.position);
 
 				//Instantiate (gameObject, r.collider.transform.position, r.collider.transform.rotation);
-				Destroy (r.collider.gameObject);
+				//Destroy (r.collider.gameObject);
+				r.collider.gameObject.SendMessage("die");
 				}
 		}
 	}

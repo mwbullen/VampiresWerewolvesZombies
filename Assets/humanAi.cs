@@ -55,6 +55,10 @@ public class humanAi : MonoBehaviour {
 
 		}
 
+	void die() {
+		Destroy (gameObject);
+		}
+	/*
 	void OnCollisionEnter (Collision collision)
 	{
 		Debug.Log ("Collision!");
@@ -63,4 +67,5 @@ public class humanAi : MonoBehaviour {
 	void OnTriggerEnter (Collider c) {
 		Debug.Log ("Trigger!");
 	}
+	*/
 }

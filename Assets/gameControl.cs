@@ -5,6 +5,8 @@ public class gameControl : MonoBehaviour {
 	public GameObject Human;
 	public GameObject Zombie;
 
+	public GameObject spawn;
+
 	public int humanCount;
 
 	Quaternion q = Quaternion.Euler (0,0,0);
@@ -21,6 +23,10 @@ public class gameControl : MonoBehaviour {
 				}
 	}
 
+	void FixedUpdate() {
+		Debug.Log ("Humans: " + GameObject.FindGameObjectsWithTag ("Human").Length);
+		Debug.Log ("Zombies: " + GameObject.FindGameObjectsWithTag ("Zombie").Length);
+	}
 
 	void clickObject() {
 		Ray r = Camera.main.ScreenPointToRay (Input.mousePosition);
@@ -41,8 +47,14 @@ public class gameControl : MonoBehaviour {
 	
 		for (int i = 0; i<humanCount; i++) {
 
-			float x = Random.Range(30, 70);
-			float z = Random.Range(30, 70);
+			//float x = Random.Range(30, 70);
+			//float z = Random.Range(30, 70);
+			//float w = spawn.renderer.bounds.size.x;
+			//float h = spawn.renderer.bounds.size.z;
+
+			//spawn.renderer.bounds.extents.
+			float x= Random.Range(spawn.renderer.bounds.min.x, spawn.renderer.bounds.max.x);
+			float z= Random.Range(spawn.renderer.bounds.min.z, spawn.renderer.bounds.max.z);
 
 			//Quaternion q = Quaternion.Euler (0,0,0);
 
