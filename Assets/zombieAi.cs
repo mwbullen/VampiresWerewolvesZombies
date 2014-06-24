@@ -5,10 +5,9 @@ public class zombieAi : MonoBehaviour {
 	public float attackInterval;
 	float timeSinceAttack;
 	public float attackSize;
+	public float fearSize;
 
 	public float lifeSpan;
-
-	float timeAlive;
 
 	public NavMeshAgent navAgent;
 	GameObject currentTarget;
@@ -25,24 +24,24 @@ public class zombieAi : MonoBehaviour {
 		//Go to new target
 		navAgent.SetDestination(currentTarget.transform.position);
 
+		//Set timer to destroy zombie after lifespan expires
 		Destroy (gameObject, lifeSpan);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		timeAlive += Time.deltaTime;
 
-		/*if (timeAlive >= lifeSpan) {
-			Destroy(gameObject);
-				}
-*/
+		//update attack timer
 		timeSinceAttack += Time.deltaTime;
-		
+
+		//check if time to attack again
 		if (timeSinceAttack > attackInterval) {
 			
 			attack();
 			timeSinceAttack = 0;
-			
+
+			//castFeat to scare other nearby humans
+			castFear();
 		}
 
 		
@@ -67,35 +66,39 @@ public class zombieAi : MonoBehaviour {
 	}
 
 
-	void showZombie() {
-		this.renderer.enabled = true;
-
-	}
-
-	void hideZombie() {
-		this.renderer.enabled = false;
-	}
-
+	//attack with spherecast
 	void attack() {
 						
 		RaycastHit r;
 
-		//= Physics.SphereCastAll(new Ray (transform.position, transform.forward), attack_size, attack_size);
-		//Debug.Log ("Attack" + "," + r_hits.Length);
-		
+		//sphere cast in front of zombie
 		if (Physics.SphereCast (new Ray (transform.position, transform.forward), attackSize, out r, 3)) {		
+				
+				//check if hits are uhman
+				if (r.collider.gameObject.tag == "Human") {		
 
-			//	Debug.Log (r.collider.gameObject.tag);
-				if (r.collider.gameObject.tag == "Human") {
+					//Create zombie on human position	
+					Camera.main.SendMessage("createZombie", r.collider.transform.position);
 
-				//		Debug.Log ("Hit");
-
-				Camera.main.SendMessage("createZombie", r.collider.transform.position);
-
-				//Instantiate (gameObject, r.collider.transform.position, r.collider.transform.rotation);
-				//Destroy (r.collider.gameObject);
-				r.collider.gameObject.SendMessage("die");
+					//Destroy human
+					r.collider.gameObject.SendMessage("die");
 				}
+		}
+	}
+
+	//send spherecast to find humans to scare
+	void castFear() {
+
+		//get all hits in range
+		foreach (RaycastHit r in  Physics.SphereCastAll (new Ray (transform.position, transform.forward), fearSize, fearSize)) {
+
+			//check if hits are uhman
+			if (r.collider.gameObject.tag == "Human") {
+
+				//tell human to run
+				r.collider.gameObject.SendMessage("Afraid");
+			}
+				
 		}
 	}
 }

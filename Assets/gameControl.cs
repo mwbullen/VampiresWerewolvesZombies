@@ -4,12 +4,12 @@ using System.Collections;
 public class gameControl : MonoBehaviour {
 	public GameObject Human;
 	public GameObject Zombie;
-
 	public GameObject spawn;
 
 	public int humanCount;
 
 	Quaternion q = Quaternion.Euler (0,0,0);
+
 	// Use this for initialization
 	void Start () {
 		loadHumans ();
@@ -17,52 +17,49 @@ public class gameControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+			//check for mouse input
 			if (Input.GetMouseButton(0)) {
 					clickObject();
 				}
 	}
 
+	//update human/zombie counter
 	void FixedUpdate() {
 		Debug.Log ("Humans: " + GameObject.FindGameObjectsWithTag ("Human").Length);
 		Debug.Log ("Zombies: " + GameObject.FindGameObjectsWithTag ("Zombie").Length);
 	}
 
+	//mouse click handler
 	void clickObject() {
+		//send raycast to get hit
 		Ray r = Camera.main.ScreenPointToRay (Input.mousePosition);
 		RaycastHit r_hit;
 
 		if (Physics.Raycast (r, out r_hit, Mathf.Infinity)) {
-			//Debug.Log (r_hit.collider.gameObject.tag);
-
+			//Check if human
 			if (r_hit.collider.gameObject.tag == "Human") {
+				//Destroy human, create zombie
 				createZombie(r_hit.collider.gameObject.transform.position);
 				Destroy(r_hit.collider.gameObject);
 			}
 		}
 
 	}
+
 	//Create humans per HumanCount
 	void loadHumans() {
 	
 		for (int i = 0; i<humanCount; i++) {
 
-			//float x = Random.Range(30, 70);
-			//float z = Random.Range(30, 70);
-			//float w = spawn.renderer.bounds.size.x;
-			//float h = spawn.renderer.bounds.size.z;
-
-			//spawn.renderer.bounds.extents.
+			//Find random position within Spawn plane
 			float x= Random.Range(spawn.renderer.bounds.min.x, spawn.renderer.bounds.max.x);
 			float z= Random.Range(spawn.renderer.bounds.min.z, spawn.renderer.bounds.max.z);
-
-			//Quaternion q = Quaternion.Euler (0,0,0);
 
 			Instantiate(Human, new Vector3(x, .5f, z), q);
 		}
 	}
 
-
+	//Create zombie at position
 	void createZombie(Vector3 position) {
 		Instantiate (Zombie, position, q);
 	}
