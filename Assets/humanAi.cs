@@ -5,7 +5,6 @@ public class humanAi : MonoBehaviour {
 	Vector3 direction;
 
 	public NavMeshAgent navAgent;
-
 	GameObject currentTarget;
 
 
