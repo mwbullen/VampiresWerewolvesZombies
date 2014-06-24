@@ -41,16 +41,17 @@ public class zombieGroupAI : MonoBehaviour {
 					//startNewGroup ();
 			//} else {
 
-					float x = Random.Range (-5, 5);
-					float z = Random.Range (-5, 5);
+		Debug.Log ("AddZombie");
+		float x = Random.Range (-5, 5);
+		float z = Random.Range (0, 10);
 
-					GameObject newZombie = (GameObject)Instantiate (zombie); 
-					newZombie.transform.parent = this.transform;
+		GameObject newZombie = (GameObject)Instantiate (zombie); 
+		newZombie.transform.parent = this.transform;
 
-					newZombie.transform.localPosition = new Vector3 (x, .5f, z);
-					//Debug.Log (newZombie);
+		newZombie.transform.localPosition = new Vector3 (x, .5f, z);
+		//Debug.Log (newZombie);
 
-					currentZombies += 1;
+		currentZombies += 1;
 			//}
 	}
 
@@ -58,19 +59,28 @@ public class zombieGroupAI : MonoBehaviour {
 		Instantiate (this);
 
 	}
+
 	void removeZombie() {
 		//zombies [currentZombies - 1].SendMessage ("hideZombie");
 		currentZombies -= 1;
 	}
 
 	void attack() {
-		RaycastHit[] r_hits = Physics.SphereCastAll(new Ray (transform.position, transform.forward), 3, 3);
-		//Debug.Log ("Attack");
+
+		int attack_size = currentZombies;
+
+		if (attack_size < 2) {
+						attack_size = 2;
+				}
+
+		RaycastHit[] r_hits = Physics.SphereCastAll(new Ray (transform.position, transform.forward), attack_size, attack_size);
+		Debug.Log ("Attack" + "," + r_hits.Length);
 
 
 		//if (Physics.SphereCastAll (new Ray (transform.position, transform.forward), 3, out r, 3).Length >0) {
 
 			foreach (RaycastHit r in r_hits) {
+			Debug.Log (r.collider.gameObject.tag);
 			if (r.collider.gameObject.tag == "Human") {
 						Destroy (r.collider.gameObject);
 						Debug.Log ("Hit");
