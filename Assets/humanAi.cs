@@ -56,5 +56,12 @@ public class humanAi : MonoBehaviour {
 
 		}
 
+	void OnCollisionEnter (Collision collision)
+	{
+		Debug.Log ("Collision!");
+	}
 
+	void OnTriggerEnter (Collider c) {
+		Debug.Log ("Trigger!");
+	}
 }
