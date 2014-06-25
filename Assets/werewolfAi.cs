@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class zombieAi : MonoBehaviour {
+public class werewolfAi : MonoBehaviour {
 	public float attackInterval;
 	float timeSinceAttack;
 	public float attackSize;
 	public float fearSize;
-
-	public float lifeSpan;
+	public float infectChance;
 
 	public NavMeshAgent navAgent;
 	GameObject currentTarget;
@@ -24,8 +23,6 @@ public class zombieAi : MonoBehaviour {
 		//Go to new target
 		navAgent.SetDestination(currentTarget.transform.position);
 
-		//Set timer to destroy zombie after lifespan expires
-		Destroy (gameObject, lifeSpan);
 	}
 	
 	// Update is called once per frame
@@ -53,7 +50,9 @@ public class zombieAi : MonoBehaviour {
 		
 	}
 
-		
+
+
+	
 	//return randomly selected nav target
 	GameObject getRandomNavTarget() {
 		GameObject[] targets = GameObject.FindGameObjectsWithTag ("Finish");
@@ -69,15 +68,15 @@ public class zombieAi : MonoBehaviour {
 						
 		RaycastHit r;
 
-		//sphere cast in front of zombie
+		//sphere cast in front of werewolf
 		if (Physics.SphereCast (new Ray (transform.position, transform.forward), attackSize, out r, 3)) {		
 				
 				//check if hits are uhman
 				if (r.collider.gameObject.tag == "Human") {		
 
-					//Create zombie on human position	
-					Camera.main.SendMessage("createZombie", r.collider.transform.position);
-
+					if (Random.Range(0f, 1f) <= infectChance) {
+					Camera.main.SendMessage("createWerewolf", r.collider.transform.position);
+				}
 					//Destroy human
 					r.collider.gameObject.SendMessage("die");
 				}

@@ -4,6 +4,7 @@ using System.Collections;
 public class gameControl : MonoBehaviour {
 	public GameObject Human;
 	public GameObject Zombie;
+	public GameObject Werewolf;
 	public GameObject spawn;
 
 	public int humanCount;
@@ -21,6 +22,10 @@ public class gameControl : MonoBehaviour {
 			if (Input.GetMouseButton(0)) {
 					clickObject();
 				}
+
+		if (Input.GetMouseButton(1)) {
+			rightclickObject();
+		}
 	}
 
 	//update human/zombie counter
@@ -46,6 +51,21 @@ public class gameControl : MonoBehaviour {
 
 	}
 
+	void rightclickObject() {
+		//send raycast to get hit
+		Ray r = Camera.main.ScreenPointToRay (Input.mousePosition);
+		RaycastHit r_hit;
+		
+		if (Physics.Raycast (r, out r_hit, Mathf.Infinity)) {
+			//Check if human
+			if (r_hit.collider.gameObject.tag == "Human") {
+				//Destroy human, create zombie
+				createWerewolf(r_hit.collider.gameObject.transform.position);
+				Destroy(r_hit.collider.gameObject);
+			}
+		}
+	}
+
 	//Create humans per HumanCount
 	void loadHumans() {
 	
@@ -62,5 +82,9 @@ public class gameControl : MonoBehaviour {
 	//Create zombie at position
 	void createZombie(Vector3 position) {
 		Instantiate (Zombie, position, q);
+	}
+
+	void createWerewolf(Vector3 position) {
+		Instantiate (Werewolf, position, q);
 	}
 }

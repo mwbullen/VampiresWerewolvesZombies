@@ -68,7 +68,9 @@ public class humanAi : MonoBehaviour {
 	void Afraid() {
 		navAgent.Stop ();
 		navAgent.speed = runSpeed;
-		navAgent.SetDestination (new Vector3 (0, 0, 0));
+		//navAgent.SetDestination (new Vector3 (0, 0, 0));
+
+		navAgent.SetDestination (GameObject.FindGameObjectWithTag ("SafeZone").transform.position);
 	}
 
 }
