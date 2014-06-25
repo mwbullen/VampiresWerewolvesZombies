@@ -5,7 +5,12 @@ public class werewolfAi : MonoBehaviour {
 	public float attackInterval;
 	float timeSinceAttack;
 	public float attackSize;
+
+	
+	public float fearInterval;
+	float timeSinceFear;
 	public float fearSize;
+
 	public float infectChance;
 
 	public NavMeshAgent navAgent;
@@ -38,9 +43,14 @@ public class werewolfAi : MonoBehaviour {
 			timeSinceAttack = 0;
 
 			//castFeat to scare other nearby humans
-			castFear();
+			//castFear();
 		}
 
+		timeSinceFear += Time.deltaTime;
+		if (timeSinceFear > fearInterval) {
+			castFear ();
+			timeSinceFear = 0;
+		}
 		
 		//If close to nav destination, pick new random destination to keep moving
 		if (navAgent.remainingDistance < 5) {

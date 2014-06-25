@@ -5,6 +5,10 @@ public class zombieAi : MonoBehaviour {
 	public float attackInterval;
 	float timeSinceAttack;
 	public float attackSize;
+
+	public float fearInterval;
+	float timeSinceFear;
+
 	public float fearSize;
 
 	public float lifeSpan;
@@ -34,6 +38,7 @@ public class zombieAi : MonoBehaviour {
 		//update attack timer
 		timeSinceAttack += Time.deltaTime;
 
+
 		//check if time to attack again
 		if (timeSinceAttack > attackInterval) {
 			
@@ -41,9 +46,14 @@ public class zombieAi : MonoBehaviour {
 			timeSinceAttack = 0;
 
 			//castFeat to scare other nearby humans
-			castFear();
+			//castFear();
 		}
 
+		timeSinceFear += Time.deltaTime;
+		if (timeSinceFear > fearInterval) {
+			castFear ();
+			timeSinceFear = 0;
+		}
 		
 		//If close to nav destination, pick new random destination to keep moving
 		if (navAgent.remainingDistance < 5) {
