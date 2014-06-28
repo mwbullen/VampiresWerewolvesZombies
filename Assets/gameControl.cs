@@ -5,7 +5,7 @@ public class gameControl : MonoBehaviour {
 	public GameObject Human;
 	public GameObject Zombie;
 	public GameObject Werewolf;
-	public GameObject spawn;
+	//public GameObject spawn;
 
 	public int humanCount;
 
@@ -71,12 +71,20 @@ public class gameControl : MonoBehaviour {
 	
 		for (int i = 0; i<humanCount; i++) {
 
+			GameObject spawn = getRandomSpawn();
+
 			//Find random position within Spawn plane
 			float x= Random.Range(spawn.renderer.bounds.min.x, spawn.renderer.bounds.max.x);
 			float z= Random.Range(spawn.renderer.bounds.min.z, spawn.renderer.bounds.max.z);
 
 			Instantiate(Human, new Vector3(x, .5f, z), q);
 		}
+	}
+
+	GameObject getRandomSpawn() {
+		GameObject[] spawns = GameObject.FindGameObjectsWithTag ("Respawn");
+
+		return spawns [Random.Range (0, spawns.Length)];
 	}
 
 	//Create zombie at position
