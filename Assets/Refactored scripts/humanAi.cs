@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class humanAi : MonoBehaviour {
-	Vector3 direction;
+	//Vector3 direction;
 
 	public NavMeshAgent navAgent;
 	GameObject currentTarget;
@@ -11,6 +11,8 @@ public class humanAi : MonoBehaviour {
 	float baseSpeed;
 
 	bool goingtoSafe = false;
+
+	public bool stayInSafe;
 
 	// Use this for initialization
 	void Start () {
@@ -52,14 +54,25 @@ public class humanAi : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		if (navAgent.remainingDistance < 5) {
+			if (goingtoSafe && stayInSafe) {
+				}else {
+				currentTarget = getRandomNavTarget ("Finish");
+				navAgent.speed = baseSpeed;
+				navAgent.SetDestination (currentTarget.transform.position);
+			}
+		}
+
 		//If close to nav destination, pick new random destination to keep moving
+		/*
 		if (navAgent.remainingDistance < 5 && !goingtoSafe) {
 				currentTarget = getRandomNavTarget ("Finish");
 				navAgent.speed = baseSpeed;
 				navAgent.SetDestination (currentTarget.transform.position);
 				}
-
+		*/
 		}
+
 
 	//Destroy human object
 	void die() {
