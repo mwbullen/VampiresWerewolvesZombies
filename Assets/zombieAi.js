@@ -9,6 +9,7 @@
 
 	//public var infectChance:float;
 	
+	public var attackDamage:float;
 	public var navAgent:NavMeshAgent ;
 	private var currentTarget:GameObject;
 	
@@ -20,7 +21,7 @@ function Start () {
 		navAgent = GetComponent(NavMeshAgent);
 		
 		//Pick a random target from the designated objects
-		currentTarget = getRandomNavTarget ("Finish");
+		currentTarget = getRandomNavTarget ("SafeZone");
 		
 		//Go to new target
 		navAgent.SetDestination(currentTarget.transform.position);
@@ -49,10 +50,24 @@ function Update () {
 		
 		//If close to nav destination, pick new random destination to keep moving
 		if (navAgent.remainingDistance < 5) {
-			currentTarget = getRandomNavTarget ("Finish");
-			navAgent.SetDestination (currentTarget.transform.position);
+			currentTarget.SendMessage("takeDamage", attackDamage);
+			
+			Destroy(gameObject);
+			//currentTarget = getRandomNavTarget ("SafeZone");
+			//navAgent.SetDestination (currentTarget.transform.position);
 		}
 }
+
+/*
+function setDestination( position:Vector3) {
+	
+	Debug.Log("SetDest");
+	navAgent.Stop();
+	navAgent.SetDestination(position);
+	
+}
+
+*/
 
 function getRandomNavTarget (tagName:String) {
 		var targets:GameObject[]  = GameObject.FindGameObjectsWithTag (tagName);
@@ -99,5 +114,11 @@ function castFear() {
 		}
 	}
 
+function goingtoSafe() {
+	if (currentTarget.tag == "SafeZone") 
+		{return true;}
+	else 
+		{return false;}
+}
 
 

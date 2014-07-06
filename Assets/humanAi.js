@@ -5,7 +5,7 @@
 	public var runSpeed:float ;
 	private var baseSpeed:float ;
 
-	private var goingtoSafe:boolean  = false;
+	//private var goingtoSafe:boolean  = false;
 
 	public var stayInSafe:boolean ;
 	
@@ -29,7 +29,9 @@ function Start () {
 
 function Update () {
 	if (navAgent.remainingDistance < 5) {
-			if (goingtoSafe && stayInSafe) {
+				if (goingtoSafe() && stayInSafe) {
+					Debug.Log(goingtoSafe);
+					enterSafeZone();
 				}else {
 				currentTarget = getRandomNavTarget ("Finish");
 				navAgent.speed = baseSpeed;
@@ -64,6 +66,21 @@ function Afraid() {
 	navAgent.Stop ();
 	navAgent.speed = runSpeed;
 	//navAgent.SetDestination (new Vector3 (0, 0, 0));
-	goingtoSafe = true;
-	navAgent.SetDestination (getRandomNavTarget ("SafeZone").transform.position);
+	//goingtoSafe = true;
+	currentTarget = getRandomNavTarget("SafeZone");
+	
+	navAgent.SetDestination (currentTarget.transform.position);
+}
+
+function goingtoSafe() {
+	if (currentTarget.tag == "SafeZone") 
+		{return true;}
+	else 
+		{return false;}
+}
+	
+function enterSafeZone() {
+	currentTarget.SendMessage("addHuman");
+	
+	die();
 }

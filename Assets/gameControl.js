@@ -49,6 +49,15 @@ function Update () {
 	}
 
 	function rightclickObject() {
+	
+	var zombies:GameObject[]  = GameObject.FindGameObjectsWithTag ("Zombie");
+/*
+		for ( var z:GameObject in zombies) {
+		Debug.Log(z);
+			z.SendMessage("setDestination", Camera.main.ScreenToWorldPoint(Input.mousePosition));
+				}
+*/				
+				
 		//send raycast to get hit
 		var r : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 		var r_hit : RaycastHit;
@@ -61,6 +70,7 @@ function Update () {
 				Destroy(r_hit.collider.gameObject);
 			}
 		}
+		
 	}
 	
 	//Create humans per HumanCount
@@ -85,12 +95,17 @@ function Update () {
 	}
 
 	//Create zombie at position
-	function createZombie( position) {
+	function createZombie( position:Vector3) {
 		Instantiate (Zombie, position, q);
 	}
 
-	function createWerewolf( position) {
+	function createWerewolf( position:Vector3) {
 		Instantiate (Werewolf, position, q);
+	}
+	
+	function createHuman( position:Vector3) {
+			Instantiate (Human, position, q);
+
 	}
 
 
