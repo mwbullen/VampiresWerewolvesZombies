@@ -9,6 +9,8 @@
 
 	private var q :Quaternion= Quaternion.Euler (0,0,0);
 
+	public var currentZombieTarget : GameObject;
+	
 
 function Start () {
 loadHumans ();
@@ -39,10 +41,25 @@ function Update () {
 
 		if (Physics.Raycast (r,  r_hit, Mathf.Infinity)) {
 			//Check if human
-			if (r_hit.collider.gameObject.tag == "Human") {
+			
+			var g : GameObject = r_hit.collider.gameObject;
+			
+			if (g.tag == "Human") {
 				//Destroy human, create zombie
-				createZombie(r_hit.collider.gameObject.transform.position);
-				Destroy(r_hit.collider.gameObject);
+				createZombie(g.transform.position);
+				Destroy(g);
+			} else if (g.tag == "SafeZone") {
+			
+				if (currentZombieTarget != null) {
+					currentZombieTarget.SendMessage("removeZombieTarget");
+					
+				}
+				g.SendMessage("makeZombieTarget");
+				currentZombieTarget = g;
+				
+				for (var z : GameObject in	GameObject.FindGameObjectsWithTag("Zombie")) {
+					z.SendMessage("setTarget", g);
+				}
 			}
 		}
 
@@ -50,7 +67,7 @@ function Update () {
 
 	function rightclickObject() {
 	
-	var zombies:GameObject[]  = GameObject.FindGameObjectsWithTag ("Zombie");
+	//var zombies:GameObject[]  = GameObject.FindGameObjectsWithTag ("Zombie");
 /*
 		for ( var z:GameObject in zombies) {
 		Debug.Log(z);
