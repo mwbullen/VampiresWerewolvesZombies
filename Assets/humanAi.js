@@ -26,7 +26,7 @@ function Start () {
 
 		var speedVar : float = navAgent.speed * speedVariation;
 		
-		Debug.Log(speedVar);
+		//Debug.Log(speedVar);
 		
 		navAgent.speed = Random.Range(navAgent.speed - speedVar, navAgent.speed + speedVar);
 		

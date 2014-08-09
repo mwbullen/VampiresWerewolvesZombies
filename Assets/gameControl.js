@@ -1,129 +1,240 @@
 ﻿#pragma strict
-
 	public var Human:GameObject;
 	public var Zombie:GameObject;
 	public var Werewolf:GameObject;
-	//public GameObject spawn;
-
+	
 	public var humanCount:int;
+	
+	public var timeLimit : float = 30;
+	private var elapsedTime : float = 0; 
 
 	private var q :Quaternion= Quaternion.Euler (0,0,0);
 
 	public var currentZombieTarget : GameObject;
 	
+	//public var zombieUIStyle : GUIStyle;
+	
+	public var  zombieUITexture : Texture2D ;
+	public var humanUITexture : Texture2D;
+	public var barBackTexture : Texture2D;
+	
+	private var gameEnded:boolean;
+	
 
 function Start () {
-loadHumans ();
+	loadHumans ();
 }
 
 function Update () {
 		//check for mouse input
-			if (Input.GetMouseButton(0)) {
-					clickObject();
-				}
+		if (Input.GetMouseButton(0)) {
+				clickObject();
+			}
 
 		if (Input.GetMouseButton(1)) {
 			rightclickObject();
 		}
+		
+		elapsedTime += Time.deltaTime;
+		
+		
+		if (elapsedTime >= timeLimit) {
+			gameOver();			
+		}
+}
+
+function gameOver() {
+		print("GameOver!");
+		
+		Time.timeScale = 0;
+		gameEnded = true;
 }
 
 //update human/zombie counter
-	function FixedUpdate() {
-		Debug.Log ("Humans: " + GameObject.FindGameObjectsWithTag ("Human").Length);
-		Debug.Log ("Zombies: " + GameObject.FindGameObjectsWithTag ("Zombie").Length);
-	}
+function FixedUpdate() {
+	//Debug.Log ("Humans: " + GameObject.FindGameObjectsWithTag ("Human").Length);
+	//Debug.Log ("Zombies: " + GameObject.FindGameObjectsWithTag ("Zombie").Length);
+}
+
+function OnGUI() {
+			
+	GUI.Box( Rect(10, 10, 100, 25), (timeLimit - elapsedTime).ToString("00") );
 	
+	
+	statusBar();
+	
+	if (gameEnded) {
+		//Buttons like Angry Birds:
+			//Retry
+			//Continue (if win)
+			//Main menu
+	
+		var UIwidth:int = Screen.width /2;
+		var UIheight:int  = Screen.height /2;
+	
+		var UItop = (Screen.height /2) - (UIheight/2);
+		var UIleft = (Screen.width /2) - (UIwidth/2);
+	
+		GUI.Box( Rect(UIleft,UItop, UIwidth, UIheight), "Game Over!");
+		
+	}
+}	
+
+function statusBar() {
+
+	//var humansAlive : int = GameObject.FindGameObjectsWithTag ("Human").Length;
+	var zombiesAlive : int = GameObject.FindGameObjectsWithTag ("Zombie").Length;
+		
+	var zombieStyle : GUIStyle = new GUIStyle();
+	zombieStyle.normal.background = zombieUITexture;
+	
+	//zombieStyle.alignment = 
+	
+	var h :GUIStyle = new GUIStyle();
+	h.normal.background = humanUITexture;
+	
+	var barBackStyle : GUIStyle = new GUIStyle();
+	barBackStyle.normal.background = barBackTexture;
+	
+	var barWidth : float = Screen.width /2;
+	//var barHeight: int = 50;
+	
+	//humanCount
+		
+	var pixelValue : float =  barWidth/ humanCount;
+	//Debug.Log("humancount: " + humanCount);
+	//Debug.Log("barwidth:" + barWidth);
+	
+	//Debug.Log("pixel value"  +  pixelValue);
+	//var humanRect : Rect = Rect(0,0, humansAlive * pixelValue, barHeight);
+	//var zombiesRect : Rect = Rect(0,0, zombiesAlive * pixelValue, barHeight);
+	
+	GUILayout.BeginArea(Rect(Screen.width/3, 0, barWidth, 100));
+	
+	//apportion based on # of humans, zombies, deceased
+		GUILayout.BeginHorizontal(barBackStyle);
+				//GUILayout.TextArea("Humans", GUIStyle(zombieUIStyle), GUILayout.Width(humansAlive * pixelValue));
+				//GUILayout.Label("Zombies", GUILayout.Width(zombiesAlive * pixelValue));
+			
+			//GUILayout.Box(zombieUITexture, GUILayout.Width(100));
+			
+			
+			GUILayout.Box("Humans", h, GUILayout.Width(getHumansAliveCount() * pixelValue));
+			GUILayout.Box("Zombies", zombieStyle, GUILayout.Width(zombiesAlive * pixelValue));
+		
+			GUILayout.EndHorizontal();
+	GUILayout.EndArea();
+	
+	//begin horizontal layout
+	
+	//end horizontal layout
+}
+			
 //mouse click handler
-	function clickObject() {
-		//send raycast to get hit
-		var r : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-		var r_hit : RaycastHit;
+function clickObject() {
+	//send raycast to get hit
+	var r : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+	var r_hit : RaycastHit;
 
-		if (Physics.Raycast (r,  r_hit, Mathf.Infinity)) {
-			//Check if human
-			
-			var g : GameObject = r_hit.collider.gameObject;
-			
-			if (g.tag == "Human") {
-				//Destroy human, create zombie
-				createZombie(g.transform.position);
-				Destroy(g);
-			} else if (g.tag == "SafeZone") {
-			
-				if (currentZombieTarget != null) {
-					currentZombieTarget.SendMessage("removeZombieTarget");
-					
-				}
-				g.SendMessage("makeZombieTarget");
-				currentZombieTarget = g;
+	if (Physics.Raycast (r,  r_hit, Mathf.Infinity)) {
+		//Check if human
+		
+		var g : GameObject = r_hit.collider.gameObject;
+		
+		if (g.tag == "Human") {
+			//Destroy human, create zombie
+			createZombie(g.transform.position);
+			Destroy(g);
+		} else if (g.tag == "SafeZone") {
+		
+			if (currentZombieTarget != null) {
+				currentZombieTarget.SendMessage("removeZombieTarget");
 				
-				for (var z : GameObject in	GameObject.FindGameObjectsWithTag("Zombie")) {
-					z.SendMessage("setTarget", g);
-				}
+			}
+			g.SendMessage("makeZombieTarget");
+			currentZombieTarget = g;
+			
+			for (var z : GameObject in	GameObject.FindGameObjectsWithTag("Zombie")) {
+				z.SendMessage("setTarget", g);
 			}
 		}
-
 	}
 
-	function rightclickObject() {
-	
-	//var zombies:GameObject[]  = GameObject.FindGameObjectsWithTag ("Zombie");
+}
+
+function rightclickObject() {
+
+//var zombies:GameObject[]  = GameObject.FindGameObjectsWithTag ("Zombie");
 /*
-		for ( var z:GameObject in zombies) {
-		Debug.Log(z);
-			z.SendMessage("setDestination", Camera.main.ScreenToWorldPoint(Input.mousePosition));
-				}
-*/				
-				
-		//send raycast to get hit
-		var r : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
-		var r_hit : RaycastHit;
-		
-		if (Physics.Raycast (r,  r_hit, Mathf.Infinity)) {
-			//Check if human
-			if (r_hit.collider.gameObject.tag == "Human") {
-				//Destroy human, create zombie
-				createWerewolf(r_hit.collider.gameObject.transform.position);
-				Destroy(r_hit.collider.gameObject);
+	for ( var z:GameObject in zombies) {
+	Debug.Log(z);
+		z.SendMessage("setDestination", Camera.main.ScreenToWorldPoint(Input.mousePosition));
 			}
+*/				
+			
+	//send raycast to get hit
+	var r : Ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+	var r_hit : RaycastHit;
+	
+	if (Physics.Raycast (r,  r_hit, Mathf.Infinity)) {
+		//Check if human
+		if (r_hit.collider.gameObject.tag == "Human") {
+			//Destroy human, create zombie
+			createWerewolf(r_hit.collider.gameObject.transform.position);
+			Destroy(r_hit.collider.gameObject);
 		}
+	}
+	
+}
+
+//Create humans per HumanCount
+function loadHumans() {
+
+	for (var i = 0; i<humanCount; i++) {
+
+		var spawn:GameObject = getRandomSpawn();
+
+		//Find random position within Spawn plane
+		var x :float= Random.Range(spawn.renderer.bounds.min.x, spawn.renderer.bounds.max.x);
+		var z:float= Random.Range(spawn.renderer.bounds.min.z, spawn.renderer.bounds.max.z);
+
+		Instantiate(Human, new Vector3(x, .5f, z), q);
+	}
+}
+
+function getRandomSpawn() {
+	var spawns : GameObject[] = GameObject.FindGameObjectsWithTag ("Respawn");
+
+	return spawns [Random.Range (0, spawns.Length)];
+}
+
+//Create zombie at position
+function createZombie( position:Vector3) {
+	Instantiate (Zombie, position, q);
+}
+
+function createWerewolf( position:Vector3) {
+	Instantiate (Werewolf, position, q);
+}
+
+function createHuman( position:Vector3) {
+		Instantiate (Human, position, q);
+
+}
+
+function getHumansAliveCount() {
+	var baseCount : int = GameObject.FindGameObjectsWithTag ("Human").Length;
+	
+	var safeZones : GameObject[] = GameObject.FindGameObjectsWithTag("SafeZone");
+	
+	for (var zone : GameObject in safeZones) {
+		var safeAI : safeZoneAi = zone.GetComponent ("safeZoneAi") as safeZoneAi;
 		
+		Debug.Log(safeAI);
+			
+		baseCount = baseCount + safeAI.humanCount;
 	}
 	
-	//Create humans per HumanCount
-	function loadHumans() {
-	
-		for (var i = 0; i<humanCount; i++) {
-
-			var spawn:GameObject = getRandomSpawn();
-
-			//Find random position within Spawn plane
-			var x :float= Random.Range(spawn.renderer.bounds.min.x, spawn.renderer.bounds.max.x);
-			var z:float= Random.Range(spawn.renderer.bounds.min.z, spawn.renderer.bounds.max.z);
-
-			Instantiate(Human, new Vector3(x, .5f, z), q);
-		}
-	}
-
-	function getRandomSpawn() {
-		var spawns : GameObject[] = GameObject.FindGameObjectsWithTag ("Respawn");
-
-		return spawns [Random.Range (0, spawns.Length)];
-	}
-
-	//Create zombie at position
-	function createZombie( position:Vector3) {
-		Instantiate (Zombie, position, q);
-	}
-
-	function createWerewolf( position:Vector3) {
-		Instantiate (Werewolf, position, q);
-	}
-	
-	function createHuman( position:Vector3) {
-			Instantiate (Human, position, q);
-
-	}
-
-
+	return baseCount;
+}
 

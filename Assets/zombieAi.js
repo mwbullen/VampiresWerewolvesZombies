@@ -64,6 +64,7 @@ function Update () {
 }
 
 
+
 function getRandomNavTarget (tagName:String) {
 		var c : gameControl   = Camera.main.GetComponent(gameControl);
 		if (c.currentZombieTarget != null) {
