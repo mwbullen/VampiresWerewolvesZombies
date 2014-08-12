@@ -77,12 +77,10 @@ function setTarget (g:GameObject) {
 	}	
 	
 function attack() {
-		Debug.Log("Guard attacking!");
+		//Debug.Log("Guard attacking!");
 
 		var colliders : Collider[] = Physics.OverlapSphere(gameObject.transform.position, attackSize);
-		
-				
-								
+										
 		for (var hit : Collider in colliders) {
 			Debug.Log(hit.collider.gameObject);
 			

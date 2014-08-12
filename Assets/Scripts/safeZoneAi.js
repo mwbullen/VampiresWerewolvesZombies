@@ -49,8 +49,12 @@ function takeDamage(damage:int) {
 }
 
 function breakOpen() {
+	var x :float= Random.Range(renderer.bounds.min.x, renderer.bounds.max.x);
+	var z:float= Random.Range(renderer.bounds.min.z, renderer.bounds.max.z);
+
 	for (var i:int = 0; i < humanCount; i++) {
-			Camera.main.SendMessage("createHuman", transform.position);
+			//Camera.main.SendMessage("createHuman", transform.position);
+			Camera.main.SendMessage("createHuman", new Vector3(x, 1, z));
 		
 	}
 	humanCount = 0;
