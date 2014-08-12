@@ -2,7 +2,7 @@ public var health : float = 100;
 public var healthDrainRate : float = 20;
 
 function Update () { 
-takeDamage (healthDrainRate * Time.deltaTime);
+	takeDamage (healthDrainRate * Time.deltaTime);
 }
 
 
