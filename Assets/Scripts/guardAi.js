@@ -10,7 +10,7 @@
 	private var currentTarget:GameObject;
 	
 	
-	
+	public var damage:float;
 	public var lifeSpan:float;
 function Start () {
 	//load NavAgent
@@ -31,7 +31,7 @@ function Start () {
 
 function Update () {
 	timeSinceAttack += Time.deltaTime;
-
+		//Debug.Log(timeSinceAttack);
 		//check if time to attack again
 		if (timeSinceAttack > attackInterval) {
 			
@@ -77,21 +77,34 @@ function setTarget (g:GameObject) {
 	}	
 	
 function attack() {
-						
-		var r:RaycastHit;
+		Debug.Log("Guard attacking!");
 
-		//sphere cast in front of werewolf
-		if (Physics.SphereCast (new Ray (transform.position, transform.forward), attackSize,  r, 3)) {		
+		var colliders : Collider[] = Physics.OverlapSphere(gameObject.transform.position, attackSize);
+		
 				
-				//check if hits are uhman
-				if (r.collider.gameObject.tag == "Zombie") {		
-
-					//Destroy human
-					r.collider.gameObject.SendMessage("die");
-				}
+								
+		for (var hit : Collider in colliders) {
+			Debug.Log(hit.collider.gameObject);
+			
+			if (hit.gameObject.tag == "Zombie") {
+				Debug.Log("Guard hit zombie!");
+				//hit.collider.gameObject.SendMessage("die");
+				engageTarget(hit.gameObject);
+				
+				return;
+			}		
 		}
 	}
 
+function engageTarget(target  : GameObject) {
+	target.SendMessage("stop");
+	navAgent.SetDestination(target.transform.position);
+	target.SendMessage("takeDamage", damage);
+	//transform.position  = Vector3.Slerp(transform.position, g.transform.position, 10f ); 
+	
+	
+	
+}
 
 
 

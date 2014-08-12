@@ -46,10 +46,10 @@ function Update () {
 			var t : GameObject = getRandomNavTarget ("SafeZone");
 			if (t == null) {t = getRandomNavTarget("Finish");}
 			
-			setTarget(t);
+			if (t != null) setTarget(t);
 			
 			navAgent.speed = baseSpeed;
-			navAgent.SetDestination (currentTarget.transform.position);	
+			//navAgent.SetDestination (currentTarget.transform.position);	
 	} else {
 
 		if (navAgent.remainingDistance < 5) {
@@ -115,7 +115,7 @@ function Afraid() {
 	var g : GameObject = getRandomNavTarget ("SafeZone");		
 	if (g == null) {g = getRandomNavTarget("Finish");}
 		
-	if (navAgent != null)  setTarget(g);
+	if (navAgent != null && g != null)  setTarget(g);
 		
 	
 	

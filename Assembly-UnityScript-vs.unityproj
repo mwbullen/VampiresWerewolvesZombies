@@ -48,6 +48,14 @@
   <ItemGroup>
      <Compile Include="Assets\Refactored scripts\baseAi.js" />
      <Compile Include="Assets\Refactored scripts\monsterAi.js" />
+     <Compile Include="Assets\Scripts\baseUnitControl.js" />
+     <Compile Include="Assets\Scripts\drawGUI.js" />
+     <Compile Include="Assets\Scripts\gameControl.js" />
+     <Compile Include="Assets\Scripts\guardAi.js" />
+     <Compile Include="Assets\Scripts\humanAi.js" />
+     <Compile Include="Assets\Scripts\safeZoneAi.js" />
+     <Compile Include="Assets\Scripts\werewolfAi.js" />
+     <Compile Include="Assets\Scripts\zombieAi.js" />
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\CameraRelativeControl.js" />
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\FirstPersonControl.js" />
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\FollowTransform.js" />
@@ -60,12 +68,6 @@
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\SmoothFollow2D.js" />
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\ZoomCamera.js" />
      <Compile Include="Assets\Standard Assets (Mobile)\Scripts\tapcontrol.js" />
-     <Compile Include="Assets\gameControl.js" />
-     <Compile Include="Assets\guardAi.js" />
-     <Compile Include="Assets\humanAi.js" />
-     <Compile Include="Assets\safeZoneAi.js" />
-     <Compile Include="Assets\werewolfAi.js" />
-     <Compile Include="Assets\zombieAi.js" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
      <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />

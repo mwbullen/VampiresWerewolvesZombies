@@ -15,22 +15,24 @@
 	
 	
 	
-	public var lifeSpan:float;
+	//public var lifeSpan:float;
 function Start () {
 	//load NavAgent
+		
+		//Destroy(gameObject, lifeSpan);
+		
 		navAgent = GetComponent(NavMeshAgent);
 		
 		//Pick a random target from the designated objects
 		var g : GameObject = getRandomNavTarget ("SafeZone");		
 		if (g == null) {g = getRandomNavTarget("Finish");}
 		
-		setTarget(g);
-		
+		if (g != null) {
+				setTarget(g);
+		}
 		//Go to new target
 		//navAgent.SetDestination(currentTarget.transform.position);
 
-		Destroy(gameObject, lifeSpan);
-		
 		castFear();
 }
 
@@ -52,7 +54,9 @@ function Update () {
 			castFear ();
 			timeSinceFear = 0;
 		}
+
 		
+						
 		//If close to nav destination, send damage and die
 //		if (navAgent.remainingDistance < 5 && currentTarget.tag == "SafeZone") {
 		//	currentTarget.SendMessage("takeDamage", attackDamage);
@@ -61,7 +65,10 @@ function Update () {
 			//currentTarget = getRandomNavTarget ("SafeZone");
 			//navAgent.SetDestination (currentTarget.transform.position);
 //		}
+
+
 }
+
 
 
 
@@ -90,6 +97,11 @@ function setTarget (g:GameObject) {
 
 	}	
 	
+//Destroy zombie object
+function die() {
+		Destroy (gameObject);
+		}	
+	
 function attack() {
 						
 		var r:RaycastHit;
@@ -106,7 +118,7 @@ function attack() {
 				//}
 					
 				} else if (r.collider.gameObject.tag == "Guard") {		
-					Destroy(gameObject);
+				//	Destroy(gameObject);
 				}
 				else if (r.collider.gameObject.tag == "SafeZone") {
 					r.collider.gameObject.SendMessage("takeDamage", attackDamage);
@@ -117,6 +129,9 @@ function attack() {
 		}
 	}
 
+function stop() {
+	navAgent.Stop();
+}
 
 	//send spherecast to find humans to scare
 function castFear() {
